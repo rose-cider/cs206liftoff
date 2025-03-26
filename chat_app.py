@@ -1,9 +1,9 @@
+# chat_app.py
 import flet as ft
 from groq import Groq
-from config.api_config import GROK_API_KEY
+from config.api_config import GROQ_API_KEY
 
-# Initialize the Groq client
-client = Groq(api_key=GROK_API_KEY)
+client = Groq(api_key=GROQ_API_KEY)
 
 def main(page: ft.Page):
     # Set window size and shape to mimic an iPhone
@@ -97,4 +97,6 @@ def main(page: ft.Page):
         )
     )
 
-ft.app(target=main)
+
+# To run separately, uncomment:
+# ft.app(target=main)
