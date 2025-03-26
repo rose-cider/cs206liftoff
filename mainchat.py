@@ -1,34 +1,95 @@
 import flet as ft
+from groq import Groq
+from config.api_config import GROK_API_KEY
+
+# Initialize the Groq client
+client = Groq(api_key=GROK_API_KEY)
 
 def main(page: ft.Page):
-    page.title = "AI Fitness Trainer Chat"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    # Set window size and shape to mimic an iPhone
+    page.title = "AI Chat App"
+    page.window_width = 390  # iPhone width
+    page.window_height = 844  # iPhone height
+    page.window_frameless = True  # Remove title bar
 
-    chat_history = ft.Column(
+    def chat_with_ai(user_input):
+        try:
+            response = client.chat.completions.create(
+                model="gemma2-9b-it",
+                messages=[
+                    {"role": "system", "content": "You are a silly and sweet hamster that's also a fitness trainer. Give realistic HUMAN exercises and fitness regimes though. Keep your responses short and concise. Break your answers into multiple short messages, each no longer than 2-3 sentences."},
+                    {"role": "user", "content": user_input},
+                ],
+                max_tokens=500  # Allow longer responses
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return f"Error: {str(e)}"
+
+    def send_message(e):
+        user_input = new_message.value
+        if user_input:
+            chat.controls.append(ft.Row([
+                ft.Container(
+                    content=ft.Text(user_input, no_wrap=False),
+                    bgcolor=ft.colors.BLUE_GREY_100,
+                    padding=10,
+                    border_radius=10,
+                    width=page.window_width * 0.7
+                )
+            ], alignment=ft.MainAxisAlignment.END))
+            
+            ai_response = chat_with_ai(user_input)
+            chat.controls.append(ft.Row([
+                ft.Container(
+                    content=ft.Text(ai_response, color=ft.colors.WHITE, no_wrap=False),
+                    bgcolor=ft.colors.PINK_300,
+                    padding=10,
+                    border_radius=10,
+                    width=page.window_width * 0.7
+                )
+            ], alignment=ft.MainAxisAlignment.START))
+            
+            new_message.value = ""
+            page.update()
+
+    chat = ft.Column(
         scroll="auto",
         expand=True,
         controls=[
-            ft.Text("AI Trainer: Welcome! I'm your AI fitness trainer. How can I help you today?", color=ft.colors.BLUE),
-            ft.Text("You: Can you suggest a workout for me?"),
-            ft.Text("AI Trainer: Sure! How about a 30-minute cardio session followed by some strength training?", color=ft.colors.BLUE),
-            ft.Text("You: That sounds good. What about diet tips?"),
-            ft.Text("AI Trainer: Great question! Focus on eating plenty of vegetables, lean proteins, and whole grains.", color=ft.colors.BLUE),
-            ft.Text("You: Thanks for the advice!"),
-            ft.Text("AI Trainer: You're welcome! Remember to stay hydrated and get enough rest too.", color=ft.colors.BLUE),
+            ft.Row([
+                ft.Container(
+                    content=ft.Text("Squeak! Welcome! I'm your Hammer, your AI fitness trainer. How can I help you today?", color=ft.colors.WHITE, no_wrap=False),
+                    bgcolor=ft.colors.PINK_300,
+                    padding=10,
+                    border_radius=10,
+                    width=page.window_width * 0.7
+                )
+            ], alignment=ft.MainAxisAlignment.START)
         ]
     )
 
-    user_input = ft.TextField(hint_text="Type your message here...", expand=True)
+    new_message = ft.TextField(hint_text="Type your message here...",
+                                expand=True,
+                                on_submit=send_message
+    )
+    send_button = ft.ElevatedButton("Send", on_click=send_message)
 
     page.add(
         ft.Column(
             [
-                ft.Text("AI Fitness Trainer", size=24, weight="bold"),
-                chat_history,
                 ft.Row(
                     [
-                        user_input,
-                        ft.ElevatedButton("Send"),
+                        ft.Image(src="assets/hammer_icon.png", width=40, height=40),
+                        ft.Text("AI Hamster Fitness Trainer", size=24, weight="bold"),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+                chat,
+                ft.Row(
+                    [
+                        new_message,
+                        send_button,
                     ],
                 ),
             ],
@@ -36,4 +97,4 @@ def main(page: ft.Page):
         )
     )
 
-ft.app(main)
+ft.app(target=main)
