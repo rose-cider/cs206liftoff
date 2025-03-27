@@ -96,13 +96,13 @@ class PersonalityQuiz:
 
         self.result_view = ft.Column(
             [
-                ft.Container(content=self.result_text, padding=ft.padding.only(top=100)),
+                ft.Container(content=self.result_text, padding=ft.padding.only(top=300)),
                 ft.Container(expand=True),  # Pushes next button to bottom
                 self.next_button
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=20,
+            spacing=50,
             expand=True,
             visible=False  # Hidden initially
         )
@@ -162,9 +162,13 @@ class PersonalityQuiz:
         # Switch views: hide quiz view, show result view
         self.quiz_view.visible = False
         self.result_view.visible = True
+        self.back_button.visible = False
         
         # Update UI for result view
         self.result_view.update()
+        self.quiz_view.update()
+        self.back_button.update()
+
 
 # Uncomment this line to run the app:
 # ft.app(target=PersonalityQuiz().main)
