@@ -2,11 +2,10 @@
 import flet as ft
 from groq import Groq
 from config.api_config import GROQ_API_KEY
-from personality_quiz import personality
 
 client = Groq(api_key=GROQ_API_KEY)
 
-def main(page: ft.Page):
+def main(page: ft.Page, personality=None): # Modified to accept personality
     # Set window size and shape to mimic an iPhone
     page.title = "AI Chatbot"
     page.window_width = 390  # iPhone width
@@ -15,8 +14,8 @@ def main(page: ft.Page):
 
     personalities_config = {
         "Athena": {
-            "greeting": "Hoot! I'm Athena, your wise and serious owl coach. Let's crush your goals together!", 
-            "icon": "assets/athena_icon.png", 
+            "greeting": "Hoot! I'm Athena, your wise and serious owl coach. Let's crush your goals together!",
+            "icon": "assets/athena_icon.png",
             "system_message": "You are Athena, a direct and motivating strict owl and fitness coach. Provide structured and actionable advice in a professional tone. Give realistic HUMAN exercises and fitness regimes though. Keep your responses short and concise. Break your answers into multiple short messages, each no longer than 2-3 sentences."
         },
         "Hammer": {
@@ -32,7 +31,7 @@ def main(page: ft.Page):
     }
 
     # Get the configuration for the selected personality
-    config = personalities_config.get(personality, personalities_config["Athena"])  # HI MIYA CHANGE THIS IF YOU WANT TO TRY THE OTHERS
+    config = personalities_config.get(personality, personalities_config["Felix"])  # HI MIYA CHANGE THIS IF YOU WANT TO TRY THE OTHERS
 
     def chat_with_ai(user_input):
         try:
@@ -60,7 +59,7 @@ def main(page: ft.Page):
                     width=page.window_width * 0.7
                 )
             ], alignment=ft.MainAxisAlignment.END))
-            
+
             ai_response = chat_with_ai(user_input)
             chat.controls.append(ft.Row([
                 ft.Container(
@@ -71,7 +70,7 @@ def main(page: ft.Page):
                     width=page.window_width * 0.7
                 )
             ], alignment=ft.MainAxisAlignment.START))
-            
+
             new_message.value = ""
             page.update()
 
@@ -93,8 +92,8 @@ def main(page: ft.Page):
 
     new_message = ft.TextField(hint_text="Type your message here...",
                                 expand=True,
-                                on_submit=send_message
-    )
+                                on_submit=send_message)
+
     send_button = ft.ElevatedButton("Send", on_click=send_message)
 
     page.add(
@@ -103,7 +102,7 @@ def main(page: ft.Page):
                 ft.Row(
                     [
                         ft.Image(src=config["icon"], width=40, height=40),  # Dynamic icon
-                        ft.Text(f"AI {personality} Fitness Trainer", size=24, weight="bold"),  # Dynamic title
+                        ft.Text(f"{personality}", size=24, weight="bold"),  # Dynamic title
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                 ),
