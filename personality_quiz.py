@@ -22,6 +22,7 @@ class PersonalityQuiz:
         self.answers = []
 
     def main(self, page: ft.Page):
+        self.page = page
         page.title = "Personality Quiz"
         page.window_width = 390
         page.window_height = 844
@@ -77,11 +78,9 @@ class PersonalityQuiz:
         )
 
         # Result view layout (hidden initially)
-        self.result_text = ft.Text(
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
-            text_align=ft.TextAlign.CENTER
-        )
+        self.result_header = ft.Text()
+        self.result_image = ft.Image()
+        self.result_description = ft.Text()
 
         self.next_button = ft.ElevatedButton(
             text="Next",
@@ -96,13 +95,16 @@ class PersonalityQuiz:
 
         self.result_view = ft.Column(
             [
-                ft.Container(content=self.result_text, padding=ft.padding.only(top=300)),
+                ft.Container (expand = 1),
+                self.result_header,
+                self.result_image,
+                self.result_description,
                 ft.Container(expand=True),  # Pushes next button to bottom
                 self.next_button
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=50,
+            spacing=20,
             expand=True,
             visible=False  # Hidden initially
         )
@@ -150,24 +152,49 @@ class PersonalityQuiz:
             self.update_question()
 
     def show_result(self):
-        """Calculate and display results."""
-        personality_scores = [sum(1 for a in self.answers if a == i) for i in range(3)]
-        
-        # Determine personality type based on scores
-        personality = ["Strict", "Balanced", "Relaxed"][personality_scores.index(max(personality_scores))]
-        
-        # Update result view content
-        self.result_text.value = f"Your AI workout buddy personality: {personality}"
-        
-        # Switch views: hide quiz view, show result view
-        self.quiz_view.visible = False
-        self.result_view.visible = True
-        self.back_button.visible = False
-        
-        # Update UI for result view
-        self.result_view.update()
-        self.quiz_view.update()
-        self.back_button.update()
+            personality_scores = [sum(1 for a in self.answers if a == i) for i in range(3)]
+            personality_index = personality_scores.index(max(personality_scores))
+            personalities = ["Athena", "Hammer", "Felix"]
+            personality = personalities[personality_index]
+
+            # Header
+            self.result_header.value = "Meet your very own gym buddy, coach, and trainer - all in one!"
+            self.result_header.size = 28  # Increase font size
+            self.result_header.weight = "bold"
+            self.result_header.text_align = "center"
+
+            # Wrap header in a container with padding
+            header_container = ft.Container(
+                content=self.result_header,
+                padding=ft.padding.only(top=200),  # Increased top padding
+                alignment=ft.alignment.center
+            )
+
+            # Image
+            self.result_image.src = f"assets/{personality.lower()}_icon.png"
+            self.result_image.width = 200
+            self.result_image.height = 200
+            self.result_image.fit = ft.ImageFit.CONTAIN
+
+            # Descriptions for each personality
+            descriptions = {
+                "Athena": "Athena is your no-nonsense fitness coach! She's direct, motivating, and always ready to guide you towards your goals. With Athena, you'll get clear instructions and a structured plan to help you succeed and feel amazing.",
+                "Hammer": "Get ready to crush your fitness goals with Hammer! He's your go-to buddy for discussing your goals and creating a plan that's all about you. Hammer believes in teamwork and open conversations to help you stay motivated and on track.",
+                "Felix": "Meet Felix, your super cool fitness buddy! He's here to cheer you on and give you that extra push you need. Felix is all about helping you reach your goals with a smile, using a delegation style that lets you take charge of your fitness journey."
+            }
+
+            # Set the result description
+            self.result_description.value = descriptions[personality]
+            self.result_description.size = 16
+            self.result_description.text_align = "center"
+
+            # Hide quiz view and show result view
+            self.quiz_view.visible = False
+            self.back_button.visible = False
+            self.result_view.visible = True
+
+            self.page.update()
+
 
 
 # Uncomment this line to run the app:
