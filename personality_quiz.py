@@ -1,5 +1,8 @@
 import flet as ft
 
+global personality
+personality = None
+
 class PersonalityQuiz:
     def __init__(self):
         self.questions = [
@@ -152,6 +155,7 @@ class PersonalityQuiz:
             self.update_question()
 
     def show_result(self):
+            global personality
             personality_scores = [sum(1 for a in self.answers if a == i) for i in range(3)]
             personality_index = personality_scores.index(max(personality_scores))
             personalities = ["Athena", "Hammer", "Felix"]
