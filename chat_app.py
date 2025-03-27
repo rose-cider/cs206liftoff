@@ -99,4 +99,4 @@ def main(page: ft.Page):
 
 
 # To run separately, uncomment:
-# ft.app(target=main)
+ft.app(target=main)
