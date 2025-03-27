@@ -15,7 +15,7 @@ def main(page: ft.Page, personality=None):
     page.window_width = 390
     page.window_height = 844
     page.window_frameless = True
-
+    
     personalities_config = {
         "Athena": {
             "greeting": "Hoot! I'm Athena, your wise and serious owl coach. Let's crush your goals together!",
@@ -74,7 +74,7 @@ def main(page: ft.Page, personality=None):
             chat.controls.append(ft.Row([
                 ft.Container(
                     content=ft.Text(ai_response, color=ft.Colors.WHITE, no_wrap=False),
-                    bgcolor=ft.Colors.PINK_300,
+                    bgcolor=ft.Colors.ORANGE_500,
                     padding=10,
                     border_radius=10,
                     width=page.window_width * 0.7
@@ -91,7 +91,7 @@ def main(page: ft.Page, personality=None):
             ft.Row([
                 ft.Container(
                     content=ft.Text(config["greeting"], color=ft.Colors.WHITE, no_wrap=False),
-                    bgcolor=ft.Colors.ORANGE_400,
+                    bgcolor=ft.Colors.ORANGE_500,
                     padding=10,
                     border_radius=10,
                     width=page.window_width * 0.7

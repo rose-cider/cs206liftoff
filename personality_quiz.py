@@ -35,6 +35,47 @@ class PersonalityQuiz:
         page.window_height = 844
         page.window_frameless = True
 
+        # Start Page Elements
+        self.start_header = ft.Text(
+            "We're exhilarated that you've joined us!",
+            size=24,
+            weight=ft.FontWeight.BOLD,
+            text_align=ft.TextAlign.CENTER
+        )
+        self.start_description = ft.Text(
+            "But before we start, we need to understand you better. Let's do a short personality quiz that will determine the best LiftOff gym buddy for you. For each of these questions, pick the answer that most closely resembles you.",
+            size=16,
+            text_align=ft.TextAlign.CENTER
+        )
+        self.start_button = ft.ElevatedButton(
+            text="OK!",
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=50),
+            ),
+            bgcolor="#F1B04C",
+            color="white",
+            width=271,
+            on_click=self.start_quiz
+        )
+
+        # Start Page Layout
+        self.start_page_content = ft.Column(
+            [
+                ft.Container(expand=1),
+                self.start_header,
+                ft.Container(height=20),
+                self.start_description,
+                ft.Container(expand=True),
+                self.start_button,
+                ft.Container(expand=1),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=20,
+            expand=True,
+            visible=True  # Initially visible
+        )
+
         # Question text container with padding for aesthetics
         self.question_text = ft.Text(
             size=20,
@@ -81,7 +122,8 @@ class PersonalityQuiz:
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=20,
-            expand=True
+            expand=True,
+            visible=False #initially invisible
         )
 
         # Result view layout (hidden initially)
@@ -102,22 +144,33 @@ class PersonalityQuiz:
 
         self.result_view = ft.Column(
             [
-                ft.Container(expand=1),
+                ft.Container (expand = 1),
                 self.result_header,
                 self.result_image,
                 self.result_description,
-                ft.Container(expand=True),  # Pushes next button to bottom
+                ft.Container(expand=True), # Pushes next button to bottom
                 self.next_button
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=20,
             expand=True,
-            visible=False  # Hidden initially
+            visible=False # Hidden initially
         )
 
-        page.add(ft.Column([self.quiz_view, self.result_view], expand=True))
+        self.main_column = ft.Column(
+            [self.start_page_content, self.quiz_view, self.result_view],
+            expand=True
+        )
+
+        page.add(self.main_column)
+
+    def start_quiz(self, e):
+        """Handle starting the quiz."""
+        self.start_page_content.visible = False
+        self.quiz_view.visible = True
         self.update_question()
+        self.page.update()
 
     def update_question(self):
         """Update the current question and options."""
@@ -204,6 +257,3 @@ class PersonalityQuiz:
             self.quiz_done_callback(personality)
         else:
             print("Callback not set")
-            
-# Uncomment this line to run the app:
-# ft.app(target=PersonalityQuiz().main)

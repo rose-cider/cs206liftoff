@@ -11,9 +11,9 @@ def main(page: ft.Page):
 
     quiz_instance = PersonalityQuiz()  # Instantiate PersonalityQuiz
 
-    def launch_chat(page):
+    def launch_chat(page, personality=None):
         page.clean()
-        chat_main(page)
+        chat_main(page, personality=personality)
 
     def quiz_done_callback(personality):
         # Callback function to launch chat with selected personality
@@ -36,4 +36,4 @@ def main(page: ft.Page):
 
     page.add(home_view)
 
-ft.app(target=main)
+ft.app(target=main, port=8550, view=ft.WEB_BROWSER)
