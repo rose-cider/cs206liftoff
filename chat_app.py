@@ -1,16 +1,20 @@
-# chat_app.py
 import flet as ft
 from groq import Groq
 from config.api_config import GROQ_API_KEY
 
 client = Groq(api_key=GROQ_API_KEY)
 
-def main(page: ft.Page, personality=None): # Modified to accept personality
-    # Set window size and shape to mimic an iPhone
+# Global conversation history
+global conversation_history
+conversation_history = []
+
+def main(page: ft.Page, personality=None):
+    global conversation_history
+    
     page.title = "AI Chatbot"
-    page.window_width = 390  # iPhone width
-    page.window_height = 844  # iPhone height
-    page.window_frameless = True  # Remove title bar
+    page.window_width = 390
+    page.window_height = 844
+    page.window_frameless = True
 
     personalities_config = {
         "Athena": {
@@ -30,20 +34,26 @@ def main(page: ft.Page, personality=None): # Modified to accept personality
         }
     }
 
-    # Get the configuration for the selected personality
-    config = personalities_config.get(personality, personalities_config["Felix"])  # HI MIYA CHANGE THIS IF YOU WANT TO TRY THE OTHERS
+    config = personalities_config.get(personality, personalities_config["Felix"])
+
+    # Initialize conversation history with system message if it's empty
+    if not conversation_history:
+        conversation_history.append({"role": "system", "content": config["system_message"]})
 
     def chat_with_ai(user_input):
+        global conversation_history
+        conversation_history.append({"role": "user", "content": user_input})
         try:
             response = client.chat.completions.create(
                 model="gemma2-9b-it",
-                messages=[
-                    {"role": "system", "content": config["system_message"]},  # Use dynamic system message
-                    {"role": "user", "content": user_input},
-                ],
-                max_tokens=500  # Allow longer responses
+                messages=conversation_history,
+                max_tokens=500
             )
-            return response.choices[0].message.content
+            ai_response = response.choices[0].message.content
+            if not isinstance(ai_response, str):
+                ai_response = str(ai_response)
+            conversation_history.append({"role": "assistant", "content": ai_response})
+            return ai_response
         except Exception as e:
             return f"Error: {str(e)}"
 
@@ -80,8 +90,8 @@ def main(page: ft.Page, personality=None): # Modified to accept personality
         controls=[
             ft.Row([
                 ft.Container(
-                    content=ft.Text(config["greeting"], color=ft.Colors.WHITE, no_wrap=False),  # Dynamic greeting
-                    bgcolor=ft.Colors.PINK_300,
+                    content=ft.Text(config["greeting"], color=ft.Colors.WHITE, no_wrap=False),
+                    bgcolor=ft.Colors.ORANGE_400,
                     padding=10,
                     border_radius=10,
                     width=page.window_width * 0.7
@@ -101,8 +111,8 @@ def main(page: ft.Page, personality=None): # Modified to accept personality
             [
                 ft.Row(
                     [
-                        ft.Image(src=config["icon"], width=40, height=40),  # Dynamic icon
-                        ft.Text(f"{personality}", size=24, weight="bold"),  # Dynamic title
+                        ft.Image(src=config["icon"], width=40, height=40),
+                        ft.Text(f"{personality}", size=24, weight="bold"),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                 ),
