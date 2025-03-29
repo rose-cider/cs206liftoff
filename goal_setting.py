@@ -1,6 +1,7 @@
 import flet as ft
+from shared_data import user_inputs, save_to_csv
 
-def main(page: ft.Page):
+def goal_setting_view(page: ft.Page):
     page.title = "Fitness Goal Setting"
     page.window_width = 430
     page.window_height = 930
@@ -17,17 +18,19 @@ def main(page: ft.Page):
     step.value = 1
 
     selected_goal = ft.Text("")
-    height_field = ft.TextField(label="Height (cm)", label_style=ft.TextStyle(color=ft.colors.BLACK), value="165", width=300, color=ft.colors.GREY_500)
-    current_weight = ft.TextField(label="Current weight (kg)",label_style=ft.TextStyle(color=ft.colors.BLACK), value="55", width=300, color=ft.colors.GREY_500)
-    target_weight = ft.TextField(label="Target weight (kg)",label_style=ft.TextStyle(color=ft.colors.BLACK), value="50", width=300, color=ft.colors.GREY_500)
+    height_field = ft.TextField(label="Height (cm)", label_style=ft.TextStyle(color=ft.colors.BLACK), width=300, color=ft.colors.BLACK)
+    current_weight = ft.TextField(label="Current weight (kg)",label_style=ft.TextStyle(color=ft.colors.BLACK), width=300, color=ft.colors.BLACK)
+    target_weight = ft.TextField(label="Target weight (kg)",label_style=ft.TextStyle(color=ft.colors.BLACK), width=300, color=ft.colors.BLACK)
     bmi_warning = ft.Text("", color=ft.colors.RED, text_align="center")
+
+    selected_month_value = {"value": ""}
 
     def go_to_step():
         step_content = None
         if step.value == 1:
-            step_content = goal_step()
-        elif step.value == 2:
             step_content = bmi_check_step()
+        elif step.value == 2:
+            step_content = goal_step()
         elif step.value == 3:
             step_content = weight_step()
         elif step.value == 4:
@@ -133,7 +136,7 @@ def main(page: ft.Page):
                             controls=[
                                 ft.ElevatedButton(
                                     text="Continue",
-                                    on_click=next_step,
+                                    on_click=lambda e: (user_inputs.update({"goal": selected_goal.value}), next_step(e)),
                                     width=250,
                                     style=ft.ButtonStyle(
                                         bgcolor=ft.colors.ORANGE,
@@ -166,6 +169,11 @@ def main(page: ft.Page):
             except:
                 bmi_warning.value = "Please enter valid numbers."
             page.update()
+        
+        def next_bmi_step(e):
+            user_inputs["height"] = height_field.value
+            user_inputs["current_weight"] = current_weight.value
+            next_step(e)
 
         return ft.Container(
             padding=ft.padding.symmetric(horizontal=20, vertical=30),
@@ -187,7 +195,7 @@ def main(page: ft.Page):
                         alignment=ft.alignment.center,
                         content=ft.Column(
                             controls=[
-                                ft.Text("Let's check your BMI first!", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.BLACK, text_align="center"),
+                                ft.Text("Let's check your BMI!", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.BLACK, text_align="center"),
                                 ft.Container(content=height_field, alignment=ft.alignment.center),
                                 ft.Container(content=current_weight, alignment=ft.alignment.center),
                                 ft.ElevatedButton(
@@ -214,7 +222,7 @@ def main(page: ft.Page):
                         padding=ft.padding.only(top=150),
                         content=ft.ElevatedButton(
                             text="Next",
-                            on_click=next_step,
+                            on_click=next_bmi_step,
                             width=250,
                             style=ft.ButtonStyle(
                                 bgcolor=ft.colors.ORANGE,
@@ -250,6 +258,7 @@ def main(page: ft.Page):
                         f"For your height, a healthy weight range is between {min_weight:.1f} kg and {max_weight:.1f} kg."
                     )
                 else:
+                    user_inputs["target_weight"] = target_weight.value
                     bmi_warning.value = ""
                     next_step()
             except:
@@ -310,16 +319,13 @@ def main(page: ft.Page):
         )
 
     def month_step():
-        month_picker = ft.Container(
-            content=ft.Dropdown(
-                label="Select Duration (in months)",
-                label_style=ft.TextStyle(color=ft.colors.BLACK),
-                width=300,
-                color=ft.colors.BLACK,
-                options=[ft.dropdown.Option(str(m)) for m in range(1, 13)],  # 1 to 12
-                on_change=lambda e: setattr("value", e.control.value)
-            ),
-            alignment=ft.alignment.center
+        month_dropdown = ft.Dropdown(
+            label="Select Duration (in months)",
+            label_style=ft.TextStyle(color=ft.colors.BLACK),
+            width=300,
+            color=ft.colors.BLACK,
+            options=[ft.dropdown.Option(str(m)) for m in range(1, 13)],
+            on_change=lambda e: selected_month_value.update({"value": e.control.value})
         )
 
         return ft.Container(
@@ -330,7 +336,7 @@ def main(page: ft.Page):
                     ft.Row(
                         [
                             ft.IconButton(icon=ft.icons.ARROW_BACK, on_click=back_step, icon_color=ft.colors.BLACK),
-                            ft.Text("Goal Setting", size=20, color=ft.colors.BLACK, weight=ft.FontWeight.BOLD,),
+                            ft.Text("Goal Setting", size=20, color=ft.colors.BLACK, weight=ft.FontWeight.BOLD),
                             ft.TextButton("Skip", on_click=next_step, style=ft.ButtonStyle(color=ft.colors.BLACK))
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN
@@ -349,7 +355,7 @@ def main(page: ft.Page):
                                     text_align="center",
                                     color=ft.colors.BLACK
                                 ),
-                                month_picker
+                                month_dropdown
                             ],
                             spacing=20,
                             alignment=ft.MainAxisAlignment.CENTER,
@@ -364,7 +370,10 @@ def main(page: ft.Page):
                             controls=[
                                 ft.ElevatedButton(
                                     text="Next",
-                                    on_click=next_step,
+                                    on_click=lambda e: (
+                                        user_inputs.update({"goal_duration": selected_month_value["value"]}),
+                                        next_step(e)
+                                    ),
                                     width=250,
                                     style=ft.ButtonStyle(
                                         bgcolor=ft.colors.ORANGE,
@@ -384,7 +393,6 @@ def main(page: ft.Page):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
         )
-
 
     def complete_step():
         return ft.Container(
@@ -435,7 +443,7 @@ def main(page: ft.Page):
                         padding=ft.padding.only(top=20),
                         content=ft.ElevatedButton(
                             text="Continue",
-                            on_click=lambda e: print("Goal setting complete"),
+                            on_click=lambda e: (save_to_csv(), print("Goal setting complete")),
                             width=250,
                             style=ft.ButtonStyle(
                                 bgcolor=ft.colors.ORANGE,
@@ -456,4 +464,3 @@ def main(page: ft.Page):
     # Launch app at step 1
     go_to_step()
 
-ft.app(target=main)
