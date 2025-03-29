@@ -1,6 +1,7 @@
 import flet as ft
 from groq import Groq
 from config.api_config import GROQ_API_KEY
+
 from nav_utils import create_navbar  # Import the navbar utility
 
 client = Groq(api_key=GROQ_API_KEY)
@@ -12,7 +13,7 @@ conversation_history = []
 def main(page: ft.Page, personality=None):
     global conversation_history
     
-    page.title = "AI Chatbot"
+    page.title = "LiftOff"
     page.window_width = 390
     page.window_height = 844
     page.window_frameless = True
