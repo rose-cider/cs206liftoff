@@ -87,7 +87,7 @@ def main(page: ft.Page, personality="Athena"):
             return f"Error: {str(e)}"
 
     def send_test_query(e):
-        user_input = f"I want to change my workout plan. Can you help me?"
+        user_input = f"I'm not sure I want to workout today..."
         chat.controls.append(ft.Row([
             ft.Container(
                 content=ft.Text(user_input, no_wrap=False),
@@ -153,9 +153,9 @@ def main(page: ft.Page, personality="Athena"):
     )
 
 # To test different AI responses, simply uncomment the one you'd like to test out.
-# ft.app(target=lambda p: main(p, personality="Athena"))
+ft.app(target=lambda p: main(p, personality="Athena"))
 # ft.app(target=lambda p: main(p, personality="Felix"))
-ft.app(target=lambda p: main(p, personality="Hammer"))
+# ft.app(target=lambda p: main(p, personality="Hammer"))
 
 # Then, run this:
 # flet run PersonalityDemo.py
