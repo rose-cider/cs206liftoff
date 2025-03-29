@@ -1,5 +1,4 @@
 import flet as ft
-from info_steps import create_steps
 import csv
 import os
 
@@ -22,15 +21,12 @@ class PersonalityQuiz:
             ["I need a firm push to get back on track and not lose progress.", "I'd appreciate talking through what went wrong and adjusting the plan.", "I prefer reflecting on it myself and figuring out how to move forward."],
             ["A strict reminder of my goals and why I need to stick to the plan.", "A discussion on how the workout benefits me, so I stay engaged...", "The freedom to choose when and how I challenge myself."],
             ["A tough, no-nonsense approach that reminds me to stay focussed.", "Positive reinforcement and a conversation about my progress.", "Gentle suggestions and leaving me to motivate myself."],
-            ["Someone who is firm and keeps me disciplined.", "Someone who is firm and keeps me disciplined.", "Someone who lets you figure things out!"]
+            ["Someone who is firm and keeps me disciplined.", "Someone who can explain why we're doing certain exercises and listens to my feedback.", "Someone who lets me figure things out!"]
         ]
 
         self.current_question = 0
         self.answers = []
         self.quiz_done_callback = None  # Callback function
-        self.user_data = {}
-        self.info_steps = []
-        self.current_step_index = 0
 
     def main(self, page: ft.Page, quiz_done_callback=None):
         self.page = page
@@ -144,7 +140,7 @@ class PersonalityQuiz:
             bgcolor="#F1B04C",
             color="white",
             width=271,
-            on_click=self.show_info_steps #Show the Info Steps
+            on_click=self.go_to_chat #Show the Info Steps
         )
 
         self.result_view = ft.Column(
@@ -162,86 +158,9 @@ class PersonalityQuiz:
             expand=True,
             visible=False # Hidden initially
         )
-
-        def submit_all(e):
-            # Gather data from all steps
-            for step in self.info_steps:
-                self.user_data.update(step.get_values())
-
-            #Print user Data
-            print("Complete User Data:", self.user_data)
-
-            # CSV Writing
-            user_data_folder = "userdata"
-            if not os.path.exists(user_data_folder):
-                os.makedirs(user_data_folder)
-
-            file_path = os.path.join(user_data_folder, "userprofile.csv")
-
-            file_exists = os.path.isfile(file_path)
-
-            try:
-                with open(file_path, mode='a', newline='', encoding='utf-8') as csvfile:
-                    fieldnames = ["Name", "WorkoutPlans", "Level", "Duration", "Frequency", "Location", "Height", "Weight", "Goal"]  # Define fieldnames in the desired order
-                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)  # Use DictWriter
-                    if not file_exists:  # Only write header if file doesn't exist yet
-                        writer.writeheader()  # Write header using fieldnames
-
-                    # Extract the text values
-                    name_value = self.user_data.get("Name", "")
-                    duration_value = self.user_data.get("Duration", "")
-                    frequency_value = self.user_data.get("Frequency", "")
-                    location_value = self.user_data.get("Location", "")
-                    level_value = self.user_data.get("Fitness Level", "") #Fitness level is one of the radio
-                    height_value = self.user_data.get("Height", "")
-                    weight_value = self.user_data.get("Weight", "")
-                    goal_value = self.user_data.get("Goal", "")
-                    workout_values = ", ".join([k for k, v in self.user_data.items() if k in ['Strength', 'Cardio', 'Sports', 'Pilates', 'Yoga', 'HIIT', 'Aerobics', 'Cycling', 'Running', 'Swimming', 'Dance', 'Endurance'] and v])
-
-                    # Convert to dictionary
-                    user_row = {
-                        "Name": name_value,
-                        "WorkoutPlans": workout_values,
-                        "Level": level_value,
-                        "Duration": duration_value,
-                        "Frequency": frequency_value,
-                        "Location": location_value,
-                        "Height": height_value,
-                        "Weight": weight_value,
-                        "Goal": goal_value,
-                    }
-                    writer.writerow(user_row)
-
-                print(f"User data saved to {file_path}")
-
-            except Exception as e:
-                print(f"Error writing to CSV: {e}")
-
-            #Continue to the Chat
-            self.go_to_chat(e)
-
-        def show_next_step(e):
-            # Hide current step
-            self.info_steps[self.current_step_index].visible = False
-            # Move to the next step
-            self.current_step_index += 1
-
-            if self.current_step_index < len(self.info_steps):
-                # Show the next step
-                self.info_steps[self.current_step_index].visible = True
-            else:
-                # If all steps are done, collect the data and go to Chat
-                print("All steps completed, collecting data...")
-                submit_all(e)
-
-            self.page.update()
-
-        self.info_steps = create_steps(on_submit=submit_all, on_back=None)
-        for step in self.info_steps:
-            step.visible = False  # Hide all steps initially
         
         self.main_column = ft.Column(
-            [self.start_page_content, self.quiz_view, self.result_view, *self.info_steps],
+            [self.start_page_content, self.quiz_view, self.result_view],
             expand=True
         )
 
@@ -338,13 +257,6 @@ class PersonalityQuiz:
         # Hide quiz view and show result view
         self.quiz_view.visible = False
         self.result_view.visible = True # Set result view to be visible.
-        self.page.update()
-
-    def show_info_steps(self, e):
-        """Show the first info step after result."""
-        self.result_view.visible = False
-        self.current_step_index = 0  # Reset step index
-        self.info_steps[self.current_step_index].visible = True
         self.page.update()
 
     def go_to_chat(self, e):
