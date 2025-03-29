@@ -39,8 +39,8 @@ def main(page: ft.Page, personality=None):
     config = personalities_config.get(personality, personalities_config["Felix"])
 
     # Initialize conversation history with system message if it's empty
-    if not conversation_history:
-        conversation_history.append({"role": "system", "content": config["system_message"]})
+    global conversation_history
+    conversation_history.append({"role": "system", "content": config["system_message"]})
 
     def chat_with_ai(user_input):
         global conversation_history
