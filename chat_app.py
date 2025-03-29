@@ -1,6 +1,7 @@
 import flet as ft
 from groq import Groq
 from config.api_config import GROQ_API_KEY
+from nav_utils import create_navbar  # Import the navbar utility
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -106,6 +107,11 @@ def main(page: ft.Page, personality=None):
 
     send_button = ft.ElevatedButton("Send", on_click=send_message)
 
+    bottom_nav = create_navbar(
+        active="chat",
+        on_nav=lambda target: page.go("/" if target == "home" else f"/{target}")
+    )
+
     page.add(
         ft.Column(
             [
@@ -123,6 +129,7 @@ def main(page: ft.Page, personality=None):
                         send_button,
                     ],
                 ),
+                bottom_nav  # Add bottom navigation bar here
             ],
             expand=True,
         )
