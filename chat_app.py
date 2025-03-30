@@ -12,12 +12,15 @@ conversation_history = []
 
 def main(page: ft.Page, personality=None):
     global conversation_history
-    
+
     page.title = "LiftOff"
     page.window_width = 390
     page.window_height = 844
     page.window_frameless = True
-    
+
+    # Enable scrolling on the page
+    page.scroll = ft.ScrollMode.ADAPTIVE  # Or .ALWAYS
+
     personalities_config = {
         "Athena": {
             "greeting": "Hoot! I'm Athena, your wise and serious owl coach. Let's crush your goals together!",
@@ -108,33 +111,52 @@ def main(page: ft.Page, personality=None):
 
     send_button = ft.ElevatedButton("Send", on_click=send_message)
 
-    bottom_nav = create_navbar(
-        active="chat",
-        on_nav=lambda target: page.go("/" if target == "home" else f"/{target}")
+# Custom header row
+    chat_header_row = ft.Row(
+        controls=[
+            ft.IconButton(icon=ft.icons.ARROW_BACK, on_click=lambda _: page.go('/'),
+                          icon_color=ft.colors.BLACK),
+            ft.Row(  # Combine image and text in a Row
+                [
+                    ft.Image(src=config["icon"], width=40, height=40),
+                    ft.Text(f"{personality}", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.BLACK),
+                ],
+                spacing=0,  # Remove space between image and text
+                vertical_alignment=ft.CrossAxisAlignment.CENTER # Align items vertically
+            ),
+            ft.Container()  # Placeholder for alignment
+        ],
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER # Align items vertically
+
     )
 
-    page.add(
-        ft.Column(
-            [
-                ft.Row(
-                    [
-                        ft.Image(src=config["icon"], width=40, height=40),
-                        ft.Text(f"{personality}", size=24, weight="bold"),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                ),
-                chat,
-                ft.Row(
-                    [
-                        new_message,
-                        send_button,
-                    ],
-                ),
-                bottom_nav  # Add bottom navigation bar here
-            ],
-            expand=True,
-        )
+    chat_content = ft.Column(
+        [
+            chat_header_row,  # Add the custom header row
+            chat,
+            ft.Row(
+                [
+                    new_message,
+                    send_button,
+                ],
+            ),
+        ],
+        expand=True,
     )
+
+    phone_frame = ft.Container(
+        content=chat_content,
+        width=390,
+        height=844,
+        bgcolor=ft.colors.WHITE,
+        border_radius=20,
+        border=ft.border.all(2, ft.colors.GREY_300),
+        alignment=ft.alignment.center,
+        padding=ft.padding.symmetric(horizontal=20, vertical=30),
+    )
+
+    page.add(phone_frame)
 
 # To run separately, uncomment:
 # ft.app(target=main)
