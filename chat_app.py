@@ -2,6 +2,8 @@ import flet as ft
 from groq import Groq
 from config.api_config import GROQ_API_KEY
 
+from nav_utils import create_navbar  # Import the navbar utility
+
 client = Groq(api_key=GROQ_API_KEY)
 
 # Global conversation history
@@ -11,7 +13,7 @@ conversation_history = []
 def main(page: ft.Page, personality=None):
     global conversation_history
     
-    page.title = "AI Chatbot"
+    page.title = "LiftOff"
     page.window_width = 390
     page.window_height = 844
     page.window_frameless = True
@@ -37,8 +39,8 @@ def main(page: ft.Page, personality=None):
     config = personalities_config.get(personality, personalities_config["Felix"])
 
     # Initialize conversation history with system message if it's empty
-    if not conversation_history:
-        conversation_history.append({"role": "system", "content": config["system_message"]})
+    global conversation_history
+    conversation_history.append({"role": "system", "content": config["system_message"]})
 
     def chat_with_ai(user_input):
         global conversation_history
@@ -106,6 +108,11 @@ def main(page: ft.Page, personality=None):
 
     send_button = ft.ElevatedButton("Send", on_click=send_message)
 
+    bottom_nav = create_navbar(
+        active="chat",
+        on_nav=lambda target: page.go("/" if target == "home" else f"/{target}")
+    )
+
     page.add(
         ft.Column(
             [
@@ -123,6 +130,7 @@ def main(page: ft.Page, personality=None):
                         send_button,
                     ],
                 ),
+                bottom_nav  # Add bottom navigation bar here
             ],
             expand=True,
         )
