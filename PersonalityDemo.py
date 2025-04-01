@@ -38,7 +38,7 @@ def main(page: ft.Page, personality="Athena"):
             "greeting": f"Hoot! I'm Athena, your wise and serious owl coach. Let's crush your goals together!",
             "icon": "assets/athena_icon.png",
             "system_message": (
-                f"You are Athena, a direct and motivating strict owl fitness coach. "
+                f"You are Athena, a direct and motivating strict owl fitness coach. Provide real human workouts and with specific instructions on how to do them, and how many reps or how long. "
                 f"Provide structured and actionable advice in a professional tone. "
                 f"User profile: {user_profile}. Respond to the user asking to change her workout plan."
             )
@@ -47,7 +47,7 @@ def main(page: ft.Page, personality="Athena"):
             "greeting": f"Squeak! I'm Hammer, your silly hamster buddy! Let's chat about your goals!",
             "icon": "assets/hammer_icon.png",
             "system_message": (
-                f"You are Hammer, a silly collaborative and supportive hamster fitness coach. "
+                f"You are Hammer, a silly collaborative and supportive hamster fitness coach. Provide real human workouts and with specific instructions on how to do them, and how many reps or how long. "
                 f"Provide helpful advice in a friendly tone. "
                 f"User profile: {user_profile}. Respond to the user asking to change her workout plan."
             )
@@ -57,7 +57,7 @@ def main(page: ft.Page, personality="Athena"):
             "icon": "assets/felix_icon.png",
             "system_message": (
                 f"You are Felix, a friendly cheerful and motivational bird fitness coach. "
-                f"Motivate the user with positivity and let them take charge of their journey. "
+                f"Motivate the user with positivity and let them take charge of their journey. Provide real human workouts and with specific instructions on how to do them, and how many reps or how long. "
                 f"User profile: {user_profile}. Respond to the user asking to change her workout plan."
             )
         }
