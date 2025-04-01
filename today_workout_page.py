@@ -1,4 +1,5 @@
 import flet as ft
+from flet import *
 from header_utils import create_header
 from nav_utils import create_navbar
 
@@ -99,50 +100,41 @@ def render_workout(page: ft.Page):
     )
 
     # Phone layout
-    phone_content = ft.Column([
-        # Top notch
-        ft.Container(
-            content=ft.Row([
-                ft.Container(
-                    width=100,
-                    height=20,
-                    border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
-                    bgcolor="#000000",
-                )
-            ], alignment=ft.MainAxisAlignment.CENTER),
-            bgcolor="#000000",
-            height=28,
+    phone_content = Column([
+        # Container(
+        #     content=Row([
+        #         Container(
+        #             width=100,
+        #             height=20,
+        #             border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
+        #             bgcolor="#000000",
+        #         )
+        #     ], alignment=MainAxisAlignment.CENTER),
+        #     bgcolor="#000000",
+        #     height=28,
+        # ),
+        Container(
+            content = workout_header,
+            height = 80,
+            padding = padding.all(10),
+            bgcolor = ft.colors.WHITE,
         ),
-        workout_header,       # fixed
-        scrollable_body,      # scrolls
-        bottom_nav            # fixed
+        scrollable_body,
+        bottom_nav
     ], spacing=0, tight=True)
 
     phone_frame = ft.Container(
         content=phone_content,
-        width=390,
+        width=390,  # Match dimensions from render_goals
         height=844,
-        bgcolor=ft.Colors.WHITE,
-        border=ft.border.all(12, "#000000"),
-        border_radius=40,
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=15,
-            color=ft.Colors.with_opacity(0.5, "#000000"),
-            offset=ft.Offset(0, 5),
-        ),
-        clip_behavior=ft.ClipBehavior.HARD_EDGE,
+        bgcolor=ft.colors.WHITE,
+        border_radius=20,  # Match rounded corners from render_goals
+        border=ft.border.all(2, ft.colors.GREY_300),  # Match border style
+        alignment=ft.alignment.center,
     )
 
-    phone_with_buttons = ft.Stack([
-        ft.Container(content=phone_frame, alignment=ft.alignment.center),
-        ft.Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=150),
-        ft.Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=190),
-        ft.Container(width=3, height=40, bgcolor="#000000", border_radius=5, right=0, top=170),
-    ])
-
     centered_container = ft.Container(
-        content=phone_with_buttons,
+        content=phone_frame,
         alignment=ft.alignment.center,
         expand=True,
     )
