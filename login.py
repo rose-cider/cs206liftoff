@@ -62,48 +62,25 @@ def render_login(page: ft.Page, is_signup=False):
 
     # Phone frame
     phone_content = ft.Column([
-        ft.Container(
-            content=ft.Row([
-                ft.Container(
-                    width=100,
-                    height=20,
-                    border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
-                    bgcolor="#000000",
-                )
-            ], alignment=ft.MainAxisAlignment.CENTER),
-            bgcolor="#000000",
-            height=28,
-        ),
         title,
         header,
         ft.Container(content=form_section, alignment=ft.alignment.center),  # Center form in phone
-    ], spacing=0, tight=True, alignment=ft.alignment.center)
+    ], spacing=0, tight=True)
 
+    # Updated phone frame (matches render_goals)
     phone_frame = ft.Container(
         content=phone_content,
         width=390,
         height=844,
-        bgcolor=ft.Colors.WHITE,
-        border=ft.border.all(12, "#000000"),
-        border_radius=40,
-        shadow=ft.BoxShadow(
-            spread_radius=1,
-            blur_radius=15,
-            color=ft.Colors.with_opacity(0.5, "#000000"),
-            offset=ft.Offset(0, 5),
-        ),
-        clip_behavior=ft.ClipBehavior.HARD_EDGE,
+        bgcolor=ft.colors.WHITE,
+        border_radius=20,
+        border=ft.border.all(2, ft.colors.GREY_300),
+        alignment=ft.alignment.center,
+        padding=ft.padding.symmetric(horizontal=20, vertical=30),
     )
 
-    phone_with_buttons = ft.Stack([
-        ft.Container(content=phone_frame, alignment=ft.alignment.center),
-        ft.Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=150),
-        ft.Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=190),
-        ft.Container(width=3, height=40, bgcolor="#000000", border_radius=5, right=0, top=170),
-    ])
-
     centered_container = ft.Container(
-        content=phone_with_buttons,
+        content=phone_frame,
         alignment=ft.alignment.center,
         expand=True,
     )

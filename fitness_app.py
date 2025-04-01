@@ -19,6 +19,6 @@ def main(page: ft.Page):
 
     # Set up route handling
     page.on_route_change = route_change
-    page.go("/goals")  # Start the app on the login page
+    page.go("/login")  # Start the app on the login page
 
 ft.app(target=main, assets_dir="assets")
