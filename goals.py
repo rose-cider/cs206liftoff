@@ -15,7 +15,7 @@ def render_goals(page: ft.Page, selected_tab_index=0):
     on_felix_click=lambda e: page.go("/felix"))
 
     def update_tab(index):
-        page.views.clear()
+        page.clean()
         render_goals(page, selected_tab_index=index)
 
     def tab_selector():
@@ -219,26 +219,31 @@ def render_goals(page: ft.Page, selected_tab_index=0):
             goal_progress() if selected_tab_index == 0 else end_goal_progress(),
             view_progress_button(),
             edit_goal_button(),
-            Container(height=20),
+            #Container(height=20),
         ],
         scroll=ScrollMode.AUTO,
         expand=True,
     )
 
     phone_content = Column([
+        # Container(
+        #     content=Row([
+        #         Container(
+        #             width=100,
+        #             height=20,
+        #             border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
+        #             bgcolor="#000000",
+        #         )
+        #     ], alignment=MainAxisAlignment.CENTER),
+        #     bgcolor="#000000",
+        #     height=28,
+        # ),
         Container(
-            content=Row([
-                Container(
-                    width=100,
-                    height=20,
-                    border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
-                    bgcolor="#000000",
-                )
-            ], alignment=MainAxisAlignment.CENTER),
-            bgcolor="#000000",
-            height=28,
+            content = goals_header,
+            height = 80,
+            padding = padding.all(10),
+            bgcolor = ft.colors.WHITE,
         ),
-        goals_header,
         scrollable_body,
         create_navbar(
             active="goals",
@@ -250,30 +255,10 @@ def render_goals(page: ft.Page, selected_tab_index=0):
         content=phone_content,
         width=390,
         height=844,
-        bgcolor=colors.WHITE,
-        border=border.all(12, "#000000"),
-        border_radius=40,
-        shadow=BoxShadow(
-            spread_radius=1,
-            blur_radius=15,
-            color=Colors.with_opacity(0.5, "#000000"),
-            offset=Offset(0, 5),
-        ),
-        clip_behavior=ClipBehavior.HARD_EDGE,
+        bgcolor=ft.colors.WHITE,
+        border_radius=20,
+        border=ft.border.all(2, ft.colors.GREY_300),
+        alignment=ft.alignment.center,
     )
 
-    phone_with_buttons = Stack([
-        Container(content=phone_frame, alignment=alignment.center),
-        Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=150),
-        Container(width=3, height=30, bgcolor="#000000", border_radius=5, left=0, top=190),
-        Container(width=3, height=40, bgcolor="#000000", border_radius=5, right=0, top=170),
-    ])
-
-    centered_container = Container(
-        content=phone_with_buttons,
-        alignment=alignment.center,
-        expand=True,
-    )
-
-    page.views.append(View("/goals", [centered_container]))
-    page.update()
+    page.add(phone_frame)

@@ -36,7 +36,7 @@ def create_header(title: str, show_back: bool = True, on_back_click=None, show_f
                 ) if show_felix else ft.Container(width=42)  # preserve layout spacing
             )
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-        padding=ft.padding.symmetric(horizontal=15, vertical=10),
+        #padding=ft.padding.symmetric(horizontal=15, vertical=10),
         bgcolor=ft.Colors.WHITE,
         border=ft.border.only(bottom=ft.border.BorderSide(1, ft.Colors.BLACK12)),
     )

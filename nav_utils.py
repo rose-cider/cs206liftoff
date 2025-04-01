@@ -21,5 +21,5 @@ def create_navbar(active: str, on_nav: callable):
         ], alignment=ft.MainAxisAlignment.SPACE_EVENLY),
         bgcolor="#FFA726",
         height=56,
-        padding=ft.padding.symmetric(vertical=4),
+        # padding=ft.padding.symmetric(vertical=4),
     )
