@@ -159,4 +159,4 @@ def main(page: ft.Page, personality=None):
     page.add(phone_frame)
 
 # To run separately, uncomment:
-# ft.app(target=main)
+ft.app(target=main)
