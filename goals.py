@@ -12,7 +12,7 @@ def render_goals(page: ft.Page, selected_tab_index=0):
     # Header styled like home
     goals_header = create_header("Goals", on_back_click=lambda e: page.go("/"),
     show_felix=True,
-    on_felix_click=lambda e: page.go("/felix"))
+    on_felix_click=lambda e: page.go("/chat"))
 
     def update_tab(index):
         page.clean()

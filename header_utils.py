@@ -1,7 +1,7 @@
 # header_utils.py
 import flet as ft
 
-def create_header(title: str, show_back: bool = True, on_back_click=None, show_felix: bool = True, on_felix_click=None):
+def create_header(title: str, show_back: bool = True, on_back_click=None, show_felix: bool = True, on_felix_click=None, icon=None):
     return ft.Container(
         content=ft.Row([
             # Back button or empty space
@@ -26,7 +26,7 @@ def create_header(title: str, show_back: bool = True, on_back_click=None, show_f
                 content=(
                     ft.GestureDetector(
                         content=ft.Container(
-                            content=ft.Image(src="felix_icon.png", width=30, height=30),
+                            content=ft.Image(src=icon, width=30, height=30),
                             bgcolor="#FFA726",
                             padding=6,
                             border_radius=30,

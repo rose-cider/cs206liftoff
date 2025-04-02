@@ -16,7 +16,7 @@ def render_home(page: ft.Page, chosen_character="Felix"):
     chosen_character = character_icons[chosen_character]
 
     character = ft.Image(src=chosen_character, width=100, height=100)
-    character_container = ft.Container(content=character, alignment=ft.alignment.center)
+    character_container = ft.Container(content=character, alignment=ft.alignment.center, on_click=lambda e: page.go("/chat"))
 
     header = create_header("Lift Off", show_back=False, show_felix=False)
 
@@ -77,6 +77,7 @@ def render_home(page: ft.Page, chosen_character="Felix"):
             padding=12,
             expand=True,
             margin=6,
+            on_click=lambda e: page.go("/change-plans")
         ),
     ])
 

@@ -4,6 +4,7 @@ import csv
 from groq import Groq
 from config.api_config import GROQ_API_KEY
 import datetime
+from header_utils import create_header
 
 # Initialize the Groq client
 client = Groq(api_key=GROQ_API_KEY)
@@ -179,14 +180,16 @@ def show_current_workout_plan(e):
     chat.update()
 
 # Main UI function
-def main(window):
+def render_change_plans(page: ft.Page):
     global chat
     global window_width
     
-    window.title = "Adjust Workout Plan"
-    window.window_width = 390
-    window.window_height = 844
-    window_width = window.window_width  # Save window width for use in other parts
+    page.title = "Adjust Workout Plan"
+    page.window_width = 390
+    page.window_height = 844
+    window_width = page.window_width  # Save window width for other parts
+
+    header = create_header("Adjust Workout Plan", True, lambda e: page.go("/"), False)
 
     chat = ft.Column(
         scroll="auto",
@@ -196,13 +199,15 @@ def main(window):
             bgcolor=ft.colors.ORANGE_400,
             padding=10,
             border_radius=10,
-            width=window.window_width * 0.7,
+            width=page.window_width * 0.7,
         )], alignment=ft.MainAxisAlignment.START)]
     )
     
     adjust_button = ft.ElevatedButton("Adjust Workout Plan", on_click=show_adjusted_workout_plan)
     current_plan_button = ft.ElevatedButton("Show Current Workout Plan", on_click=show_current_workout_plan)
     
-    window.add(ft.Column([chat, ft.Row([adjust_button, current_plan_button], alignment=ft.MainAxisAlignment.CENTER)], expand=True))
+    # window.add(ft.Column([chat, ft.Row([adjust_button, current_plan_button], alignment=ft.MainAxisAlignment.CENTER)], expand=True))
+    page.views.append(ft.View("/chat", [header, chat, ft.Row([adjust_button, current_plan_button])]))
+    page.update()
 
-ft.app(target=main)
+# ft.app(target=render_change_plans)

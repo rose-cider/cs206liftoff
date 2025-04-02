@@ -3,16 +3,20 @@ from flet import *
 from header_utils import create_header
 from nav_utils import create_navbar
 
-def render_workout(page: ft.Page):
+def render_workout(page: ft.Page, chosen_character=None):
     page.title = "Today's Workout"
     page.padding = 0
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#1A1A1A"
 
+    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png","Athena": "athena_icon.png"}
+    chosen_character = character_icons[chosen_character]
+
     # Header styled like home
     workout_header = create_header("Workout", on_back_click=lambda e: page.go("/"),
     show_felix=True,
-    on_felix_click=lambda e: page.go("/felix"))
+    on_felix_click=lambda e: page.go("/chat"),
+    icon=chosen_character)
 
     # Reusable goal widget
     def goal_circle(label: str, value: str):

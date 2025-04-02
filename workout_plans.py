@@ -479,7 +479,7 @@ def workout_complete_step(back_step, next_step):
         )
     )
 
-def main(page: ft.Page):
+def render_workout_plans(page: ft.Page):
     page.title = "Workout Plan"
     page.window_width = 430
     page.window_height = 930
@@ -518,15 +518,17 @@ def main(page: ft.Page):
             border=ft.border.all(2, ft.colors.GREY_300),
             alignment=ft.alignment.center
         )
+        page.views.append(ft.View("/quiz", [phone_frame]))
+        page.update()
 
-        page.controls.clear()
-        page.add(
-            ft.Container(
-                content=phone_frame,
-                alignment=ft.alignment.center,
-                expand=True
-            )
-        )
+        # page.controls.clear()
+        # page.add(
+        #     ft.Container(
+        #         content=phone_frame,
+        #         alignment=ft.alignment.center,
+        #         expand=True
+        #     )
+        # )
 
     steps = [
         user_name_step,
@@ -540,4 +542,6 @@ def main(page: ft.Page):
 
     update_content()
 
-ft.app(target=main)
+    
+
+# ft.app(target=render_workout_plans)

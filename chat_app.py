@@ -10,7 +10,7 @@ client = Groq(api_key=GROQ_API_KEY)
 global conversation_history
 conversation_history = []
 
-def main(page: ft.Page, personality=None):
+def render_chat(page: ft.Page, personality=None):
     global conversation_history
 
     page.title = "LiftOff"
@@ -156,7 +156,8 @@ def main(page: ft.Page, personality=None):
 
     )
 
-    page.add(phone_frame)
+    page.views.append(ft.View("/chat", [phone_frame]))
+    page.update()
 
 # To run separately, uncomment:
-ft.app(target=main)
+# ft.app(target=render_chat)
