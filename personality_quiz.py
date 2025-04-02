@@ -376,26 +376,33 @@ def render_quiz(page: ft.Page, quiz_done_callback=None):
     # Initial welcome screen
     welcome_content = ft.Column(
         [
-            ft.Text("Welcome to LiftOff!", size=24, weight="bold", text_align="center"),
+            ft.Text("We're exhilarated that you've joined us!", size=24, weight="bold", text_align="center"),
             ft.Text(
-                "Let's find your perfect gym buddy with a quick personality quiz.",
+                "But before we start, we need to understand you better. Let's do a short personality quiz that will determine the best LiftOff gym buddy for you. For each of these questions, pick the answer that most closely resembles you.",
                 size=16,
-                text_align="center",
+                text_align=ft.TextAlign.CENTER,
             ),
-            ft.ElevatedButton(
-                "Start Quiz",
-                style=ft.ButtonStyle(
-                    shape=ft.RoundedRectangleBorder(radius=50),
-                    bgcolor="#F1B04C",
-                    color="white",
-                ),
-                width=271,
-                on_click=lambda e: start_quiz(),
+            ft.Row(  # Use Row to center the button
+                [
+                    ft.ElevatedButton(
+                        "OK!",
+                        style=ft.ButtonStyle(
+                            shape=ft.RoundedRectangleBorder(radius=50),
+                            bgcolor="#F1B04C",
+                            color="white",
+                        ),
+                        width=271,
+                        on_click=lambda e: start_quiz(),
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,  # Center the button horizontally
             ),
         ],
         spacing=20,
         alignment=ft.MainAxisAlignment.CENTER,  # Center elements vertically within column
     )
+
+
 
     def start_quiz():
         content_area.content = ft.Column(
