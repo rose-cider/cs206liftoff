@@ -1,5 +1,5 @@
 import flet as ft
-from flet import *
+
 from nav_utils import create_navbar
 from header_utils import create_header
 

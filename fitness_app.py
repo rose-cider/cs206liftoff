@@ -3,6 +3,7 @@ from home_app import render_home
 from today_workout_page import render_workout
 from goals import render_goals
 from login import render_login
+from personality_quiz import PersonalityQuiz
 
 def main(page: ft.Page):
 

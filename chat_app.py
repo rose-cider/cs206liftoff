@@ -152,6 +152,8 @@ def main(page: ft.Page, personality=None):
         border_radius=20,
         border=ft.border.all(2, ft.colors.GREY_300),
         alignment=ft.alignment.center,
+        padding=ft.padding.symmetric(horizontal=20, vertical=30),  # Match padding
+
     )
 
     page.add(phone_frame)

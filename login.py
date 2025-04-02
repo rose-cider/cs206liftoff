@@ -1,5 +1,6 @@
 import flet as ft
 
+
 def render_login(page: ft.Page, is_signup=False):
     page.views.clear()
     page.title = "LiftOff"
