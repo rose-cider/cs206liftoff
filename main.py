@@ -49,7 +49,7 @@ def main(page: ft.Page):
         elif page.route == "/workout":
             render_workout(page, chosen_character=user_personality)
         elif page.route == "/goals":  
-            render_goals(page)
+            render_goals(page, chosen_character=user_personality)
         else:
             render_home(page, chosen_character=user_personality)
 

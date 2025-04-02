@@ -3,102 +3,106 @@ import flet as ft
 from nav_utils import create_navbar
 from header_utils import create_header
 
-def render_goals(page: ft.Page, selected_tab_index=0):
+def render_goals(page: ft.Page, selected_tab_index=0, chosen_character=None):
     page.title = "Goals"
     page.padding = 0
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = color.WHITE
+    page.bgcolor = ft.colors.WHITE
+
+    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png","Athena": "athena_icon.png"}
+    chosen_icon = character_icons[chosen_character]
 
     # Header styled like home
     goals_header = create_header("Goals", on_back_click=lambda e: page.go("/"),
     show_felix=True,
-    on_felix_click=lambda e: page.go("/chat"))
+    on_felix_click=lambda e: page.go("/chat"),
+    icon=chosen_icon)
 
     def update_tab(index):
         page.clean()
-        render_goals(page, selected_tab_index=index)
+        render_goals(page, selected_tab_index=index, chosen_character=chosen_character)
 
     def tab_selector():
-        return Container(
-            margin=margin.only(top=10),
-            content=Row(
-                alignment=MainAxisAlignment.CENTER,
+        return ft.Container(
+            margin=ft.margin.only(top=10),
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER,
                 controls=[
-                    Tabs(
+                    ft.Tabs(
                         selected_index=selected_tab_index,
                         animation_duration=300,
                         on_change=lambda e: update_tab(e.control.selected_index),
                         tabs=[
-                            Tab(text="Weekly"),
-                            Tab(text="End goal"),
+                            ft.Tab(text="Weekly"),
+                            ft.Tab(text="End goal"),
                         ],
                         expand=False,
                         indicator_color="#FFA726",
                         indicator_thickness=3,
-                        label_color=colors.BLACK,
-                        unselected_label_color=colors.BLACK54
+                        label_color=ft.colors.BLACK,
+                        unselected_label_color=ft.colors.BLACK54
                     )
                 ]
             )
         )
 
     def goal_progress():
-        return Container(
-            margin=margin.only(left=20, right=20, top=20),
-            padding=padding.all(20),
-            border=border.all(1, color=colors.BLACK12),
+        return ft.Container(
+            margin=ft.margin.only(left=20, right=20, top=20),
+            padding=ft.padding.all(20),
+            border=ft.border.all(1, color=ft.colors.BLACK12),
             border_radius=20,
-            content=Column(
-                alignment=MainAxisAlignment.CENTER,
-                horizontal_alignment=CrossAxisAlignment.CENTER,
+            content=ft.Column(
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
-                    Text("Burn 1400 kcal per week", size=22, weight="bold"),
-                    Container(
-                        margin=margin.only(top=20, bottom=20),
-                        content=Stack(
+                    ft.Text("Burn 1400 kcal per week", size=22, weight="bold"),
+                    ft.Container(
+                        margin=ft.margin.only(top=20, bottom=20),
+                        content=ft.Stack(
                             controls=[
-                                ProgressRing(
+                                ft.ProgressRing(
                                     width=200,
                                     height=200,
                                     value=0.43,
                                     stroke_width=15,
                                     color="#FFA726",
-                                    bgcolor=colors.BLACK12,
+                                    bgcolor=ft.colors.BLACK12,
                                 ),
-                                Container(
+                                ft.Container(
                                     width=200,
                                     height=200,
-                                    alignment=Alignment(0, 0),
-                                    content=Column(
-                                        alignment=MainAxisAlignment.CENTER,
-                                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                                    alignment=ft.alignment.center,
+                                    content=ft.Column(
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                         controls=[
-                                            Text("600 kcal", size=24, weight="bold"),
-                                            Text("/1400 kcal", size=18, color=colors.BLACK54),
+                                            ft.Text("600 kcal", size=24, weight="bold"),
+                                            ft.Text("/1400 kcal", size=18, color=ft.colors.BLACK54),
                                         ]
                                     ),
                                 ),
                             ],
                         )
                     ),
-                    Container(
+                    ft.Container(
                         bgcolor="#FFA726",
                         border_radius=10,
-                        padding=padding.all(15),
-                        content=Row(
-                            alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        padding=ft.padding.all(15),
+                        content=ft.Row(
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                             controls=[
-                                Text(
+                                ft.Text(
                                     "You have burnt 600 kcal\nin 3 days! Keep it up!",
-                                    color=colors.WHITE,
+                                    color=ft.colors.WHITE,
                                     size=16,
                                     weight="w500",
                                 ),
-                                Image(
+                                ft.Image(
                                     src="felix_icon.png",
                                     width=60,
                                     height=60,
-                                    fit=ImageFit.CONTAIN,
+                                    fit=ft.ImageFit.CONTAIN,
                                 )
                             ]
                         )
@@ -107,142 +111,21 @@ def render_goals(page: ft.Page, selected_tab_index=0):
             )
         )
 
-    def end_goal_progress():
-        return Container(
-            margin=margin.only(left=20, right=20, top=20),
-            padding=padding.all(20),
-            border=border.all(1, color=colors.BLACK12),
-            border_radius=20,
-            content=Column(
-                alignment=MainAxisAlignment.CENTER,
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    Text("Burn 8000 kcal total", size=22, weight="bold"),
-                    Container(
-                        margin=margin.only(top=20, bottom=20),
-                        content=Stack(
-                            controls=[
-                                ProgressRing(
-                                    width=200,
-                                    height=200,
-                                    value=0.75,
-                                    stroke_width=15,
-                                    color="#FFA726",
-                                    bgcolor=colors.BLACK12,
-                                ),
-                                Container(
-                                    width=200,
-                                    height=200,
-                                    alignment=Alignment(0, 0),
-                                    content=Column(
-                                        alignment=MainAxisAlignment.CENTER,
-                                        horizontal_alignment=CrossAxisAlignment.CENTER,
-                                        controls=[
-                                            Text("11250 kcal", size=24, weight="bold"),
-                                            Text("/15000 kcal", size=18, color=colors.BLACK54),
-                                        ]
-                                    ),
-                                ),
-                            ],
-                        )
-                    ),
-                    Container(
-                        bgcolor="#FFA726",
-                        border_radius=10,
-                        padding=padding.all(15),
-                        content=Row(
-                            alignment=MainAxisAlignment.SPACE_BETWEEN,
-                            controls=[
-                                Text(
-                                    "You're 75% there!\nKeep up the momentum!",
-                                    color=colors.WHITE,
-                                    size=16,
-                                    weight="w500",
-                                ),
-                                Image(
-                                    src="felix_icon.png",
-                                    width=60,
-                                    height=60,
-                                    fit=ImageFit.CONTAIN,
-                                )
-                            ]
-                        )
-                    )
-                ]
-            )
-        )
-
-    def view_progress_button():
-        return Container(
-            margin=margin.only(left=20, right=20, top=20),
-            content=ElevatedButton(
-                content=Row(
-                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                    controls=[
-                        Text("View Progress", color=colors.WHITE, size=18, weight="w500"),
-                        Icon(ft.icons.CHEVRON_RIGHT, color=colors.WHITE),
-                    ]
-                ),
-                style=ButtonStyle(
-                    bgcolor={"": "#FFA726"},
-                    shape=RoundedRectangleBorder(radius=10),
-                    padding=padding.all(20),
-                ),
-                width=350
-            )
-        )
-
-    def edit_goal_button():
-        return Container(
-            margin=margin.only(left=20, right=20, top=10),
-            content=ElevatedButton(
-                content=Row(
-                    alignment=MainAxisAlignment.SPACE_BETWEEN,
-                    controls=[
-                        Text("Edit Goal", color=colors.WHITE, size=18, weight="w500"),
-                        Icon(ft.icons.EDIT, color=colors.WHITE),
-                    ]
-                ),
-                style=ButtonStyle(
-                    bgcolor={"": "#FFA726"},
-                    shape=RoundedRectangleBorder(radius=10),
-                    padding=padding.all(20),
-                ),
-                width=350,
-            )
-        )
-
-    # Scrollable content area
-    scrollable_body = Column(
+    scrollable_body = ft.Column(
         controls=[
             tab_selector(),
             goal_progress() if selected_tab_index == 0 else end_goal_progress(),
-            view_progress_button(),
-            edit_goal_button(),
-            #Container(height=20),
         ],
-        scroll=ScrollMode.AUTO,
+        scroll=ft.ScrollMode.AUTO,
         expand=True,
     )
 
-    phone_content = Column([
-        # Container(
-        #     content=Row([
-        #         Container(
-        #             width=100,
-        #             height=20,
-        #             border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
-        #             bgcolor="#000000",
-        #         )
-        #     ], alignment=MainAxisAlignment.CENTER),
-        #     bgcolor="#000000",
-        #     height=28,
-        # ),
-        Container(
-            content = goals_header,
-            height = 80,
-            padding = padding.all(10),
-            bgcolor = ft.colors.WHITE,
+    phone_content = ft.Column([
+        ft.Container(
+            content=goals_header,
+            height=80,
+            padding=ft.padding.all(10),
+            bgcolor=ft.colors.WHITE,
         ),
         scrollable_body,
         create_navbar(
@@ -251,7 +134,7 @@ def render_goals(page: ft.Page, selected_tab_index=0):
         )
     ], spacing=0, tight=True)
 
-    phone_frame = Container(
+    phone_frame = ft.Container(
         content=phone_content,
         width=390,
         height=844,
@@ -261,4 +144,5 @@ def render_goals(page: ft.Page, selected_tab_index=0):
         alignment=ft.alignment.center,
     )
 
-    page.add(phone_frame)
+    page.views.append(ft.View("/goals", [phone_frame]))
+    page.update()
