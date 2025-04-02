@@ -7,7 +7,7 @@ def render_goals(page: ft.Page, selected_tab_index=0):
     page.title = "Goals"
     page.padding = 0
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = colors.WHITE
+    page.bgcolor = color.WHITE
 
     # Header styled like home
     goals_header = create_header("Goals", on_back_click=lambda e: page.go("/"),

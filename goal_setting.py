@@ -2,6 +2,7 @@ import flet as ft
 from shared_data import user_inputs, save_to_csv
 
 def goal_setting_view(page: ft.Page):
+    page.views.clear()
     page.title = "Fitness Goal Setting"
     page.window_width = 430
     page.window_height = 930
@@ -47,15 +48,8 @@ def goal_setting_view(page: ft.Page):
             border=ft.border.all(2, ft.colors.GREY_300),
             alignment=ft.alignment.center
         )
-
-        page.controls.clear()
-        page.add(
-            ft.Container(
-                content=phone_frame,
-                alignment=ft.alignment.center,
-                expand=True
-            )
-        )
+        page.views.append(ft.View("/goal-setting", [phone_frame]))
+        page.update()
 
     def back_step(e):
         if step.value > 1:
@@ -443,7 +437,7 @@ def goal_setting_view(page: ft.Page):
                         padding=ft.padding.only(top=20),
                         content=ft.ElevatedButton(
                             text="Continue",
-                            on_click=lambda e: (save_to_csv(), print("Goal setting complete")),
+                            on_click=lambda e: (save_to_csv(), page.go("/")),
                             width=250,
                             style=ft.ButtonStyle(
                                 bgcolor=ft.colors.ORANGE,

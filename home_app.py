@@ -5,15 +5,18 @@ import asyncio
 from header_utils import create_header
 from nav_utils import create_navbar
 
-def render_home(page: ft.Page):
+def render_home(page: ft.Page, chosen_character="Felix"):
     page.views.clear()
     page.title = "Lift Off"
     page.padding = 0
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#1A1A1A"
 
-    felix = ft.Image(src="felix_icon.png", width=100, height=100)
-    felix_container = ft.Container(content=felix, alignment=ft.alignment.center)
+    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png","Athena": "athena_icon.png"}
+    chosen_character = character_icons[chosen_character]
+
+    character = ft.Image(src=chosen_character, width=100, height=100)
+    character_container = ft.Container(content=character, alignment=ft.alignment.center)
 
     header = create_header("Lift Off", show_back=False, show_felix=False)
 
@@ -43,7 +46,7 @@ def render_home(page: ft.Page):
                         padding=8,
                     ),
                 ], expand=True),
-                felix_container,
+                character_container,
             ]),
         ], spacing=15),
         bgcolor="#FFA726",
@@ -178,22 +181,22 @@ def render_home(page: ft.Page):
     page.views.append(ft.View("/", [centered_container]))
     page.update()
 
-    # Animate Felix AFTER adding to the page
-    async def float_felix():
+    # Animate Charatcter AFTER adding to the page
+    async def float_character():
         t = 0
         while True:
             if page.route != "/":
                 break
-            felix_container.offset = ft.Offset(0, 0.03 * math.sin(t))
-            felix_container.update()
+            character_container.offset = ft.Offset(0, 0.03 * math.sin(t))
+            character_container.update()
             t += 0.2
             await asyncio.sleep(0.05)
 
-    async def delayed_felix_animation():
+    async def delayed_character_animation():
         await asyncio.sleep(0.1)
-        await float_felix()
+        await float_character()
 
-    page.run_task(delayed_felix_animation)
+    page.run_task(delayed_character_animation)
 
 
 
