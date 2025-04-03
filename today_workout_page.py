@@ -83,7 +83,7 @@ def render_workout(page: ft.Page, chosen_character=None):
             bgcolor=ft.Colors.BLUE_50,
             padding=10,
             border_radius=5,
-            content=ft.Text("📝 Notes: You have not yet completed your session of the day.")
+            content=ft.Text("Note: You have not yet completed your session of the day.")
         )
     ], spacing=10)
 
@@ -117,6 +117,7 @@ def render_workout(page: ft.Page, chosen_character=None):
         #     bgcolor="#000000",
         #     height=28,
         # ),
+        #What is this ^ is it still needed?
         Container(
             content = workout_header,
             height = 80,
