@@ -9,14 +9,21 @@ def render_goals(page: ft.Page, selected_tab_index=0, chosen_character=None):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = ft.colors.WHITE
 
-    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png","Athena": "athena_icon.png"}
+    character_icons = {
+        "Felix": "felix_icon.png",
+        "Hammer": "hammer_icon.png",
+        "Athena": "athena_icon.png"
+    }
     chosen_icon = character_icons[chosen_character]
 
     # Header styled like home
-    goals_header = create_header("Goals", on_back_click=lambda e: page.go("/"),
-    show_felix=True,
-    on_felix_click=lambda e: page.go("/chat"),
-    icon=chosen_icon)
+    goals_header = create_header(
+        "Goals",
+        on_back_click=lambda e: page.go("/"),
+        show_felix=True,
+        on_felix_click=lambda e: page.go("/chat"),
+        icon=chosen_icon
+    )
 
     def update_tab(index):
         page.clean()
@@ -111,13 +118,78 @@ def render_goals(page: ft.Page, selected_tab_index=0, chosen_character=None):
             )
         )
 
+    def end_goal_progress():
+        return ft.Container(
+            margin=ft.margin.only(left=20, right=20, top=20),
+            padding=ft.padding.all(20),
+            border=ft.border.all(1, color=ft.colors.BLACK12),
+            border_radius=20,
+            content=ft.Column(
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Text("Complete 10,000 steps daily", size=22, weight="bold"),
+                    ft.Container(
+                        margin=ft.margin.only(top=20, bottom=20),
+                        content=ft.Stack(
+                            controls=[
+                                ft.ProgressRing(
+                                    width=200,
+                                    height=200,
+                                    value=0.0,  # Placeholder progress value
+                                    stroke_width=15,
+                                    color="#4CAF50",
+                                    bgcolor=ft.colors.BLACK12,
+                                ),
+                                ft.Container(
+                                    width=200,
+                                    height=200,
+                                    alignment=ft.alignment.center,
+                                    content=ft.Column(
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                        controls=[
+                                            ft.Text("0 steps", size=24, weight="bold"),
+                                            ft.Text("/10,000 steps", size=18, color=ft.colors.BLACK54),
+                                        ]
+                                    ),
+                                ),
+                            ],
+                        )
+                    ),
+                    ft.Container(
+                        bgcolor="#4CAF50",
+                        border_radius=10,
+                        padding=ft.padding.all(15),
+                        content=ft.Row(
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                            controls=[
+                                ft.Text(
+                                    "Track your daily steps\nto reach your end goal!",
+                                    color=ft.colors.WHITE,
+                                    size=16,
+                                    weight="w500",
+                                ),
+                                ft.Image(
+                                    src="steps_icon.png",
+                                    width=60,
+                                    height=60,
+                                    fit=ft.ImageFit.CONTAIN
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        )
+
     scrollable_body = ft.Column(
         controls=[
             tab_selector(),
             goal_progress() if selected_tab_index == 0 else end_goal_progress(),
         ],
-        scroll=ft.ScrollMode.AUTO,
-        expand=True,
+        scroll = ft.ScrollMode.AUTO,
+        expand=True
     )
 
     phone_content = ft.Column([
