@@ -8,6 +8,9 @@ from goal_setting import goal_setting_view
 from workout_plans import render_workout_plans
 from chat_app import render_chat
 from AdjustPlan import render_change_plans
+from workout_detail_page import render_workout_detail
+from focus_mode_page import render_focus_mode
+from buddy_mode_page import render_buddy_mode
 
 def main(page: ft.Page):
     # Page configuration (matches both login and quiz styling)
@@ -50,6 +53,12 @@ def main(page: ft.Page):
             render_workout(page, chosen_character=user_personality)
         elif page.route == "/goals":  
             render_goals(page, chosen_character=user_personality)
+        elif page.route == "/workout-detail":
+            render_workout_detail(page, chosen_character=user_personality)
+        elif page.route == "/focus":
+            render_focus_mode(page)
+        elif page.route == "/buddy":
+            render_buddy_mode(page)
         else:
             render_home(page, chosen_character=user_personality)
 

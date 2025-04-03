@@ -9,16 +9,17 @@ def render_workout(page: ft.Page, chosen_character=None):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = "#1A1A1A"
 
-    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png","Athena": "athena_icon.png"}
+    character_icons = {"Felix": "felix_icon.png", "Hammer": "hammer_icon.png", "Athena": "athena_icon.png"}
     chosen_character = character_icons[chosen_character]
 
-    # Header styled like home
-    workout_header = create_header("Workout", on_back_click=lambda e: page.go("/"),
-    show_felix=True,
-    on_felix_click=lambda e: page.go("/chat"),
-    icon=chosen_character)
+    workout_header = create_header(
+        "Workout",
+        on_back_click=lambda e: page.go("/"),
+        show_felix=True,
+        on_felix_click=lambda e: page.go("/chat"),
+        icon=chosen_character
+    )
 
-    # Reusable goal widget
     def goal_circle(label: str, value: str):
         return ft.Column([
             ft.Container(
@@ -34,7 +35,6 @@ def render_workout(page: ft.Page, chosen_character=None):
             ft.Text(label, size=11, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
-    # Goal section
     goal_section = ft.Container(
         bgcolor="#FFA726",
         padding=20,
@@ -48,14 +48,42 @@ def render_workout(page: ft.Page, chosen_character=None):
         ])
     )
 
-    # Workout card
-    def session_card(title, kcal, time, img_url):
+    def session_card(title, kcal, time, img_url, description, is_completed=False):
+        # Completed overlay layer
+        image_layer = ft.Stack([
+            ft.Image(src=img_url, width=300, height=100, border_radius=10, fit=ft.ImageFit.COVER),
+            ft.Container(
+                visible=is_completed,
+                width=300,
+                height=100,
+                alignment=ft.alignment.center,
+                bgcolor=ft.colors.BLACK54,
+                border_radius=10,
+                content=ft.Text("COMPLETED", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.WHITE),
+            )
+        ])
+
+        def go_to_detail(e):
+            if is_completed:
+                return  # prevent click if completed
+            page.client_storage.set("workout_detail", {
+                "title": title,
+                "img_url": img_url,
+                "kcal": kcal,
+                "time": time,
+                "description": description
+            })
+            page.go("/workout-detail")
+
         return ft.Container(
             bgcolor=ft.Colors.WHITE,
             border_radius=10,
             padding=10,
             content=ft.Column([
-                ft.Image(src=img_url, width=300, height=100, border_radius=10, fit=ft.ImageFit.COVER),
+                ft.GestureDetector(
+                    on_tap=go_to_detail,
+                    content=image_layer,
+                ),
                 ft.Text(title, weight=ft.FontWeight.BOLD),
                 ft.Row([
                     ft.Row([
@@ -70,15 +98,14 @@ def render_workout(page: ft.Page, chosen_character=None):
             ])
         )
 
-    # Workout session list
     session_section = ft.Column([
         ft.Row([
             ft.Text("Session of the day", weight=ft.FontWeight.BOLD, size=14),
             ft.Text("View All", color=ft.Colors.BLUE, size=12),
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-        session_card("Quick Warm Up", 125, 20, "https://picsum.photos/300/100?1"),
-        session_card("Arm Strengthening", 125, 50, "https://picsum.photos/300/100?2"),
-        session_card("Shadow Boxing", 125, 40, "https://picsum.photos/300/100?3"),
+        session_card("Quick Warm Up", 125, 20, "https://picsum.photos/300/100?1", "Light cardio and stretching.", is_completed=True),
+        session_card("Arm Strengthening", 125, 50, "https://picsum.photos/300/100?2", "Upper body strength building.", is_completed=True),
+        session_card("Shadow Boxing", 125, 40, "https://picsum.photos/300/100?3", "Speed and agility practice."),
         ft.Container(
             bgcolor=ft.Colors.BLUE_50,
             padding=10,
@@ -87,13 +114,11 @@ def render_workout(page: ft.Page, chosen_character=None):
         )
     ], spacing=10)
 
-    # Bottom nav
     bottom_nav = create_navbar(
         active="workout",
         on_nav=lambda target: page.go("/" if target == "home" else f"/{target}")
     )
 
-    # ✅ Scrollable center section
     scrollable_body = ft.Column(
         controls=[
             goal_section,
@@ -103,26 +128,12 @@ def render_workout(page: ft.Page, chosen_character=None):
         expand=True,
     )
 
-    # Phone layout
     phone_content = Column([
-        # Container(
-        #     content=Row([
-        #         Container(
-        #             width=100,
-        #             height=20,
-        #             border_radius=ft.border_radius.only(bottom_right=12, bottom_left=12),
-        #             bgcolor="#000000",
-        #         )
-        #     ], alignment=MainAxisAlignment.CENTER),
-        #     bgcolor="#000000",
-        #     height=28,
-        # ),
-        #What is this ^ is it still needed?
         Container(
-            content = workout_header,
-            height = 80,
-            padding = padding.all(10),
-            bgcolor = ft.colors.WHITE,
+            content=workout_header,
+            height=80,
+            padding=padding.all(10),
+            bgcolor=ft.colors.WHITE,
         ),
         scrollable_body,
         bottom_nav
@@ -130,11 +141,11 @@ def render_workout(page: ft.Page, chosen_character=None):
 
     phone_frame = ft.Container(
         content=phone_content,
-        width=390,  # Match dimensions from render_goals
+        width=390,
         height=844,
         bgcolor=ft.colors.WHITE,
-        border_radius=20,  # Match rounded corners from render_goals
-        border=ft.border.all(2, ft.colors.GREY_300),  # Match border style
+        border_radius=20,
+        border=ft.border.all(2, ft.colors.GREY_300),
         alignment=ft.alignment.center,
     )
 
@@ -144,8 +155,5 @@ def render_workout(page: ft.Page, chosen_character=None):
         expand=True,
     )
 
-    page.views.append(ft.View("/workout", [centered_container]))
+    page.views.append(ft.View("/workout", controls=[centered_container]))
     page.update()
-
-
-
